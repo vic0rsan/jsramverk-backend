@@ -1,27 +1,25 @@
 /**
  * Connect to the database and setup it with some default data.
  */
- "use strict";
+"use strict";
 
- const mongo = require("mongodb").MongoClient;
- const dsn =  process.env.DBWEBB_DSN || "mongodb://localhost:27017/mumin";
- 
- const fs = require("fs");
- const path = require("path");
- const docs = JSON.parse(fs.readFileSync(
-     path.resolve(__dirname, "setup.json"),
-     "utf8"
- ));
- 
- 
- 
- // Do it.
- resetCollection(dsn, "crowd", docs)
-     .catch(err => console.log(err));
- 
- 
- 
- /**
+const mongo = require("mongodb").MongoClient;
+const dsn =  process.env.DBWEBB_DSN || "mongodb://localhost:27017/mumin";
+
+const fs = require("fs");
+const path = require("path");
+const docs = JSON.parse(fs.readFileSync(
+    path.resolve(__dirname, "setup.json"),
+    "utf8"
+));
+
+// Do it.
+resetCollection(dsn, "crowd", docs)
+    .catch(err => console.log(err));
+
+
+
+/**
   * Reset a collection by removing existing content and insert a default
   * set of documents.
   *
@@ -35,13 +33,13 @@
   *
   * @return {Promise<void>} Void
   */
- async function resetCollection(dsn, colName, doc) {
-     const client  = await mongo.connect(dsn);
-     const db = await client.db();
-     const col = await db.collection(colName);
- 
-     await col.deleteMany();
-     await col.insertMany(doc);
- 
-     await client.close();
- }
+async function resetCollection(dsn, colName, doc) {
+    const client  = await mongo.connect(dsn);
+    const db = await client.db();
+    const col = await db.collection(colName);
+
+    await col.deleteMany();
+    await col.insertMany(doc);
+
+    await client.close();
+}
