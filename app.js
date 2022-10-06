@@ -5,10 +5,39 @@ const morgan = require('morgan');
 const bodyParser = require("body-parser");
 
 const app = express();
+
+const httpServer = require("http").createServer(app);
+const io = require("socket.io")(httpServer, {
+    cors: {
+        origin: "*",
+        methods: ["GET", "POST", "PUT"]
+    }
+});
+
+io.sockets.on('connection', function(socket) {
+    //console.log(socket.id);
+
+    socket.on('create', function(room) {
+        if (room) {
+            socket.join(room);
+            console.log(`roomid: ${room}`);
+        }
+    });
+
+    socket.on("doc", function (data) {
+        //socket.broadcast.emit("doc", data);
+        socket.to(data._id).emit("doc", data);
+        console.log(data);
+    });
+
+    socket.on('leave', function (room) {
+        socket.leave(room);
+    });
+});
+
 const port = process.env.PORT || 1337;
 
 const index = require('./routes/index');
-const hello = require('./routes/hello');
 const docs = require('./routes/docs');
 
 app.use(cors());
@@ -26,7 +55,6 @@ app.use(bodyParser.json()); // for parsing application/json
 app.use(bodyParser.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
 
 app.use('/', index);
-app.use('/hello', hello);
 app.use('/docs', docs);
 
 // This is middleware called for all routes.
@@ -61,6 +89,8 @@ app.use((err, req, res, next) => {
 });
 
 // Start up server
-const server = app.listen(port, () => console.log(`Example API listening on port ${port}!`));
+const server = httpServer.listen(port, () => {
+    console.log(`Example API listening on port ${port}!`);
+});
 
 module.exports = server;
