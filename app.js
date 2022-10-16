@@ -39,6 +39,7 @@ const port = process.env.PORT || 1337;
 
 const index = require('./routes/index');
 const docs = require('./routes/docs');
+const auth = require('./routes/auth');
 
 app.use(cors());
 app.options('*', cors());
@@ -56,6 +57,7 @@ app.use(bodyParser.urlencoded({ extended: true })); // for parsing application/x
 
 app.use('/', index);
 app.use('/docs', docs);
+app.use('/auth', auth);
 
 // This is middleware called for all routes.
 // Middleware takes three parameters.
