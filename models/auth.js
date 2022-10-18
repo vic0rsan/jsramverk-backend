@@ -1,6 +1,5 @@
 const database = require('../db/database');
 const bcrypt = require('bcryptjs');
-const e = require('express');
 const jwt = require('jsonwebtoken');
 
 const saltRounds = 10;
@@ -30,7 +29,7 @@ const auth = {
                 if (data) {
                     return res.status(201).json({msg: "User created"});
                 }
-            } catch(e) {
+            } catch (e) {
                 return res.status(500).json({
                     errors: {
                         status: 500,
@@ -67,7 +66,7 @@ const auth = {
                         status: 200,
                         title: "Login succeeded",
                         email: user.email,
-                        token: token 
+                        token: token
                     }
                 });
             }
@@ -98,6 +97,7 @@ const auth = {
             db = await database.getDb(collectionName);
             const col = db.collection;
             const data = await col.findOne({email: email});
+
             console.log(data);
             if (data) {
                 return auth.compareLogin(res, data, password);
@@ -108,9 +108,9 @@ const auth = {
                         source: "/auth/login",
                         title: "Invalid email-password combo"
                     }
-                })
+                });
             }
-        } catch(e) {
+        } catch (e) {
             return res.status(500).json({
                 errors: {
                     status: 500,
@@ -121,6 +121,23 @@ const auth = {
             });
         } finally {
             await db.client.close();
+        }
+    },
+    getAllUser: async function getAllUser() {
+        let db;
+
+        try {
+            db = await database.getDb(collectionName);
+            const col = db.collection;
+            const data = await col.find({}).toArray();
+
+            if (data) {
+                return data;
+            }
+        } catch (e) {
+            return e;
+        } finally {
+            db.client.close();
         }
     },
     checkToken: async function checkToken(req, res, next) {
@@ -137,11 +154,11 @@ const auth = {
                     }
                 });
             }
-            req.user = {}
+            req.user = {};
             req.user.email = decoded.email;
             return next();
         });
     }
-}
+};
 
 module.exports = auth;

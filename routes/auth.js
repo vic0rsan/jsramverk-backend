@@ -7,7 +7,7 @@ router.post('/register', async (req, res) => {
 });
 
 router.post('/login', async (req, res) => {
-   await auth.login(req, res);
+    await auth.login(req, res);
 });
 
 module.exports = router;

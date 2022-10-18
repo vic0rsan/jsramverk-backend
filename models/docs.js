@@ -12,6 +12,10 @@ const docs = {
             const col = db.collection;
             const data = await col.find({}).toArray();
 
+            if (res === undefined) {
+                return data;
+            }
+
             if (data) {
                 return res.json({data: data});
             }
@@ -42,11 +46,16 @@ const docs = {
                     {allowed: email }
                 ]
             })
-            .toArray();
+                .toArray();
+
+            if (res === undefined) {
+                return data;
+            }
+
             if (data) {
                 return res.status(200).json({data: data});
             }
-        } catch(e) {
+        } catch (e) {
             return res.status(500).json({
                 errors: {
                     status: 500,
@@ -157,7 +166,6 @@ const docs = {
                             {allowed: email}
                         ]}
                     ]
-                    
                 });
             } else {
                 data = await col.findOne({
@@ -188,13 +196,14 @@ const docs = {
         try {
             db = await database.getDb(collectionName);
             const col = db.collection;
-            const data = await col.updateOne(
-                { _id: ObjectId(id)},
+            const data = await col.updateOne({
+                _id: ObjectId(id)},
             {
                 $addToSet: {
                     allowed: email
                 }
             });
+
             if (data) {
                 return res.status(204).json({data: {msg: `Document shared to ${email}`}});
             }
@@ -211,6 +220,6 @@ const docs = {
             db.client.close();
         }
     }
-}
+};
 
 module.exports = docs;
