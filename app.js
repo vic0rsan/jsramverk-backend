@@ -47,6 +47,7 @@ const port = process.env.PORT || 1337;
 const index = require('./routes/index');
 const docs = require('./routes/docs');
 const auth = require('./routes/auth');
+const mail = require('./routes/mail');
 const authMod = require('./models/auth');
 
 app.use(cors());
@@ -66,6 +67,8 @@ app.use(bodyParser.urlencoded({ extended: true })); // for parsing application/x
 app.use('/', index);
 app.use('/docs', docs);
 app.use('/auth', auth);
+app.use('/mail', mail);
+
 const schema = new GraphQLSchema({
     query: RootQueryType
 });
