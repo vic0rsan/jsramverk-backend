@@ -36,15 +36,24 @@ const docs = {
     getUserDocs: async function getUserDocs(req, res) {
         let db;
         const email = req.user.email;
+        const code = req.user.code;
 
         try {
             db = await database.getDb(collectionName);
             const col = db.collection;
             const data = await col.find({
-                $or: [
-                    {owner: email},
-                    {allowed: email }
+                $and: [
+                    {
+                        $or: [
+                            {owner: email},
+                            {allowed: email }
+                        ]
+                    },
+                    {
+                        code: code
+                    }
                 ]
+               
             })
                 .toArray();
 
@@ -71,6 +80,10 @@ const docs = {
 
     create: async function create(req, res) {
         let db;
+        const title = req.body.title;
+        const body = req.body.body;
+        const code = req.body.code;
+        const owner = req.user.email;
 
         try {
             db = await database.getDb(collectionName);
@@ -80,9 +93,10 @@ const docs = {
             //Add custom id for test cases
             if (process.env.NODE_ENV !== 'test') {
                 data = await col.insertOne({
-                    title: req.body.title,
-                    body: req.body.body,
-                    owner: req.user.email,
+                    title: title,
+                    body: body,
+                    code: code,
+                    owner: owner,
                     allowed: []
                 });
             } else {

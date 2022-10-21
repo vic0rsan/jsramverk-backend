@@ -1,7 +1,8 @@
 const {
     GraphQLObjectType,
     GraphQLString,
-    GraphQLList
+    GraphQLList,
+    GraphQLBoolean
 } = require('graphql');
 
 const DocType = require('./docs.js');
@@ -18,12 +19,15 @@ const RootQueryType = new GraphQLObjectType({
             type: new GraphQLList(DocType),
             description: 'List of all documents',
             args: {
-                email: { type: GraphQLString }
+                email: { type: GraphQLString },
+                code: { type: GraphQLBoolean }
             },
             resolve: async function(parent, args) {
                 const req = {user: {
-                    email: args.email
-                }};
+                    email: args.email,
+                    code: args.code  
+                }          
+            };
                 const userDocs = await docs.getUserDocs(req);
 
                 return userDocs;
