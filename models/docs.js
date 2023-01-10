@@ -53,7 +53,6 @@ const docs = {
                         code: code
                     }
                 ]
-               
             })
                 .toArray();
 

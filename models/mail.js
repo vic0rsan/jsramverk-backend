@@ -22,7 +22,7 @@ const mail = {
                     <h2>You can now edit the document at <i>TheEditor</i> in the link below.</h2>
                     <b>Before you start:</b> 
                     you will need to create an account at our site using your current email.
-                    <br><a href="https://www.student.bth.se/~gusu20/editor/">Register link.</a>`
+                    <br><a href="https://www.student.bth.se/~gusu20/editor/">Link to the site.</a>`
         };
 
         await sgMail.send(msg);

@@ -25,9 +25,9 @@ const RootQueryType = new GraphQLObjectType({
             resolve: async function(parent, args) {
                 const req = {user: {
                     email: args.email,
-                    code: args.code  
-                }          
-            };
+                    code: args.code
+                }
+                };
                 const userDocs = await docs.getUserDocs(req);
 
                 return userDocs;
